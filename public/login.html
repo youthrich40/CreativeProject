@@ -59,7 +59,7 @@
                     //   everything += "<li><b>" + toTitleCase(item.stakeName) + '</b>: ' + item.stakeUnitNo ;
                     //});
                     $.each(data[0].wards, function(i, item) {
-                       everything += "<li><b>" + toTitleCase(item.wardName) + '</b>: ' + item.wardUnitNo;
+                       everything += "<li><b>" + item.wardName + '</b>: ' + item.wardUnitNo;
                     });
                     everything += "</ol>";
                     $("#unitResults").html(everything);

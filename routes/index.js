@@ -30,6 +30,7 @@ router.post('/login', function(req, res) {
     
     var j = request.jar();
     request = request.defaults({jar:j});
+    res.status(200);
 });
 
 router.get('/getUnits', function(req,res) {                                                                                  //https://stackoverflow.com/questions/17765525/scraping-a-website-which-requires-authentication-using-node-js
