@@ -18,13 +18,12 @@
         $(document).ready(function() {
           
           $("#loginButton").click(function(e) {
-                    var value = $("#topicField").val();
-                    console.log(value);
                     e.preventDefault();
-                    $("#searchTerm").text(value);
                     
                     postLogin();
-                    getUnits(value);
+                    console.log("logged in!");
+                    getUnits();
+
                 });
         });
         
@@ -36,7 +35,6 @@
                 };
                 
                 console.log("ABOUT TO AJAX");
-                
                 $.ajax({
                     url: url,
                     type: 'POST',
@@ -46,35 +44,73 @@
                 });
             }
         
-          function getUnits(credentials) {
+          function getUnits() {
                 //search = search.toLowerCase();
                 var url = "getUnits";
                 url = encodeURI(url);   //escape spaces and stuff
-            
+                var units;
+                
                 console.log(url);
                 $.getJSON(url,function(data) {
-                    console.log(data);
+                    //console.log(data);
                     var everything;
                     everything = "<ol>";
                     //$.each(data, function(i, item) {
-                    //   everything += "<li><b>" + toTitleCase(item.stakeName) + '</b>: ' + item.stakeUnitNo ;    //spelling is correct for the OwlBot API lol
+                    //   everything += "<li><b>" + toTitleCase(item.stakeName) + '</b>: ' + item.stakeUnitNo ;
                     //});
                     $.each(data[0].wards, function(i, item) {
-                       everything += "<li><b>" + toTitleCase(item.wardName) + '</b>: ' + item.wardUnitNo ;    //spelling is correct for the OwlBot API lol
+                       everything += "<li><b>" + toTitleCase(item.wardName) + '</b>: ' + item.wardUnitNo;
                     });
                     everything += "</ol>";
-                    $("#stackOverflowResults").html(everything);
+                    $("#unitResults").html(everything);
                     $("#searchTerm").text(data[0].stakeName);
+                    //return data.responseJSON;
                 })
-                .done(function() {console.log('getJSON request succeeded'); })
+                .done(function(data) {
+                  console.log('getJSON request succeeded'); 
+                  units = data;
+                  console.log(units[0].wards);
+                  getTeachingPools(units[0].wards);
+                })
                 .fail(function(jqXHR, textStatus, errorThrown) {
                     console.log('getJSON request failed! ' + textStatus);
                     console.log("incoming"+jqXHR.responseText);
                 })
                 .always(function() {console.log('getJSON request ended!');
                 });
-                
             }
+          
+          function getTeachingPools(units) {
+            console.log("Starting to get teaching pool. Units: " + units);
+            for (var i = 0; i < units.length; i++) { 
+              console.log(units[i].wardName +" - Admin Rights: " +units[i].userHasWardAdminRights);
+              if (units[i].userHasWardAdminRights || units[i].userHasStakeAdminRights) {
+                var unitNumber = units[i].wardUnitNo;
+                var url = "getTeachingPool?q=" + unitNumber;
+                console.log("Getting teaching pool. URL: "+url);
+                
+                $.getJSON(url, function(data) {
+                  var everything = "<ol>";
+                  $.each(data, function(i, item) {
+                     everything += "<li><b>" + item.fullName + '</b>: ' + item.statusName;
+                  });
+                  everything += "</ol>";
+                  $("#teachingPoolResults").html(everything);
+                })
+                .done(function() {
+                      console.log('getJSON request succeeded'); 
+                      
+                    })
+                    .fail(function(jqXHR, textStatus, errorThrown) {
+                        console.log('getJSON request failed! ' + textStatus);
+                        console.log("incoming"+jqXHR.responseText);
+                    })
+                    .always(function() {console.log('getJSON request ended!');
+                    });
+              }
+              else {console.log(units[i].wardName + " skipped as user does not have admin rights");}
+            }
+          }
             
           function toTitleCase(str) {
           return str.replace(
@@ -132,7 +168,8 @@
                 <input id="loginButton" type="submit" value="Submit">
             </form>
             <h4 id="searchTerm">No search</h4>
-            <div id="stackOverflowResults">No results</div>
+            <div id="unitResults">No results</div>
+            <div id="teachingPoolResults">No teaching pool</div>
         </div>
       </div>
     </div>
@@ -164,7 +201,6 @@
               <p>
                 <a class="returnToTop" href="#top">Return to Top</a>
               </p>
-              <p class="copyright text-muted" style="margin-left:auto; margin-right:auto; text-align:center;">Powered by <a href='https://owlbot.info'>Owlbot</a></p>
               <p class="copyright text-muted" style="margin-left:auto; margin-right:auto; text-align:center;">Copyright &copy; 2018 Benson Kane</p>
             </div>
           </div>
