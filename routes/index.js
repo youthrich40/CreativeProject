@@ -2,8 +2,6 @@ var express = require('express');
 var router = express.Router();
 var fs = require('fs');
 var cors = require("cors");
-//var request = require('request');
-//request = request.defaults({jar: true});
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -14,8 +12,6 @@ module.exports = router;
 
 var username;
 var password;
-
-//this.cookieJar = request.jar();
 
 var clerkURL = 'http://clerk.lds.org';
 var loginURL = 'https://ident.lds.org/sso/UI/Login';
@@ -70,9 +66,6 @@ router.get('/getUnits', function(req,res) {                                     
             }
             
             request.get({
-                path: "/directory/services/web/v3.0/unit/current-user-units/",
-                scheme: "https",
-                authority: 'www.lds.org',
                 url: unitListURL,
                 method: "GET",
                 gzip: true,
@@ -98,8 +91,6 @@ router.get('/getTeachingPool', function(req,res) {                              
   console.log("url = " + teachingPoolURL);
 
             request.get({
-                scheme: "https",
-                authority: 'www.lds.org',
                 url: teachingPoolURL,
                 method: "GET",
                 gzip: true,

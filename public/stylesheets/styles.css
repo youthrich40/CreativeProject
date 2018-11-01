@@ -1,0 +1,92 @@
+.pics {
+    padding: 5px 0px;
+}
+
+.col-sm-4 {
+
+	padding: 15px;
+	border: 1px solid rgba(0, 0, 0, 0.8);
+	/*border-radius: 20px; */
+	
+}
+.row.limit [class*="col-"]{
+  max-height:20px;
+  overflow:hidden;
+}
+
+
+header {
+	background-color:#d9d9d9;
+}
+footer {
+}
+body {
+	/*background-color:#e6e6e6;*/
+}
+.CloserSpacedParas {
+	line-height: 2.0;
+	font-family: palatino;
+}
+
+.experienceList {
+	font-size: 16px;
+	line-height: 2.0;
+	font-family: palatino;
+}
+
+.experienceItem {
+	line-height: 1.5;
+}
+
+.firmTitle {
+	float: left;
+	font-weight: bold;
+}
+
+.jobTitle {
+	float: left;
+	font-style:italic;
+}
+
+.timeRange {
+	float: right;
+	font-weight: bold;
+}
+
+.jobLocation {
+	float: right;
+}
+
+.socialButton{
+	width:60px;
+	height:60px;
+	border:0;
+	padding: 8px;
+}
+.socialButton:hover {
+  background-color: #ddd;	/* looks cool */
+  color: black;
+}
+
+.coolerText {
+	padding: 5px 10px;
+	font-family: palatino;
+	font-style: italic;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #D3D3D3;
+}
+
+.returnToTop {
+	display: table;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	font-family: palatino;
+	font-size: 18px;
+	padding: 10px;
+}
+
+.returnToTop:hover {
+  color: black;
+}
