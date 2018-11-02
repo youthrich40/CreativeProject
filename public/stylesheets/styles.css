@@ -6,7 +6,7 @@
 
 	padding: 15px;
 	border: 1px solid rgba(0, 0, 0, 0.8);
-	/*border-radius: 20px; */
+	border-radius: 20px; 
 	
 }
 .row.limit [class*="col-"]{
@@ -21,7 +21,10 @@ header {
 footer {
 }
 body {
+	background-image: URL("https://www.romancatholicman.com/wp-content/uploads/2017/06/Jesus45.jpg");
+    background-size:cover;
 	/*background-color:#e6e6e6;*/
+	
 }
 .CloserSpacedParas {
 	line-height: 2.0;
