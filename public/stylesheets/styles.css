@@ -6,7 +6,7 @@
 
 	padding: 15px;
 	border: 1px solid rgba(0, 0, 0, 0.8);
-	border-radius: 20px; 
+	/*border-radius: 20px; */
 	
 }
 .row.limit [class*="col-"]{
@@ -14,6 +14,10 @@
   overflow:hidden;
 }
 
+.navbar{
+	opacity: 0.7;
+    filter: alpha(opacity=30); /* For IE8 and earlier */
+}
 
 header {
 	background-color:#d9d9d9;
@@ -21,10 +25,11 @@ header {
 footer {
 }
 body {
-	background-image: URL("https://www.romancatholicman.com/wp-content/uploads/2017/06/Jesus45.jpg");
-    background-size:cover;
 	/*background-color:#e6e6e6;*/
-	
+	background-image: url("../../source/img01.jpg");
+	background-size: cover;
+	background-position: top; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
 }
 .CloserSpacedParas {
 	line-height: 2.0;
@@ -79,6 +84,10 @@ body {
 	border-width: 1px;
 	border-color: #D3D3D3;
 }
+.copyright{
+	padding-top:50px;
+	color:white;
+}
 
 .returnToTop {
 	display: table;
@@ -88,8 +97,38 @@ body {
 	font-family: palatino;
 	font-size: 18px;
 	padding: 10px;
+	color: #e8e8e8;
+	font-weight: bold;
 }
 
 .returnToTop:hover {
   color: black;
+  text-decoration: none;
 }
+
+.container {
+	padding-top: 70px !important;
+}
+
+.LDS_tools {
+	color:#5e5e5e;
+	padding-top: 70px !important;
+	text-align: center !important;
+}
+
+.buttonHolder{
+	padding-top: 30px;
+	text-align: center !important;
+}
+
+.input-group{
+	width: 100%;
+	
+}
+
+.search{
+	padding-top: 30px;
+	text-align: center;
+	color: white;
+}
+

@@ -1,240 +1,261 @@
 <html>
-    <head>
-        <title>WhiteField 7</title>
-        
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-        
-        <link rel="stylesheet" href="stylesheets/styles.css">
-        
-        <script
-          src="http://code.jquery.com/jquery-3.2.1.min.js">
-        </script>
-        
-        <script>
-        $(document).ready(function() {
-          /*
-          $("#loginButton").click(function(e) {
-                    e.preventDefault();
-                    
-                    postLogin();
-                    console.log("logged in!");
-                    getUnits();
 
-                });
-            */
-            $('#loginForm').submit(function(e) {
-              e.preventDefault();
-              console.log('in the form submit function');
-              postLogin();
-              console.log("logged in!");
-              getUnits();
+<head>
+  <title>WhiteField 7</title>
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="stylesheets/styles.css">
+
+  <script src="http://code.jquery.com/jquery-3.2.1.min.js">
+  </script>
+
+  <script>
+    $(document).ready(function() {
+      /*
+      $("#loginButton").click(function(e) {
+                e.preventDefault();
+                
+                postLogin();
+                console.log("logged in!");
+                getUnits();
+
             });
-        });
-        
-            function postLogin() {
-                var url = "/login";
-                var data = {
-                    user: $("#usernameField").val(),
-                    password: $("#passwordField").val()
-                };
-                
-                console.log("ABOUT TO AJAX");
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    data: data
-                }).done(response => {
-                    console.log(response);
-                });
-            }
-        
-          function getUnits() {
-                //search = search.toLowerCase();
-                var url = "getUnits";
-                url = encodeURI(url);   //escape spaces and stuff
-                var units;
-                
-                console.log(url);
-                $.getJSON(url,function(data) {
-                    //console.log(data);
-                    var everything;
-                    everything = "<ol>";
-                    $.each(data, function(i, item) {
-                       everything += "<li><b>" + item.stakeName + '</b>: ' + item.stakeUnitNo ;
-                       everything += '<ol>';
-                       $.each(data[0].wards, function(i, item) {
-                          everything += "<li><b>" + item.wardName + '</b>: ' + item.wardUnitNo;
-                       });
-                      everything += '</ol>';
-                    });
-                    everything += "</ol>";
-                    $("#unitResults").html(everything);
-                    $("#searchTerm").text('Units');
-                    //return data.responseJSON;
-                })
-                .done(function(data) {
-                  console.log('getJSON request succeeded'); 
-                  units = data;
-                  console.log(units[0].wards);
-                  getTeachingPools(units[0].wards);
-                })
-                .fail(function(jqXHR, textStatus, errorThrown) {
-                    console.log('getJSON request failed! ' + textStatus);
-                    console.log("incoming"+jqXHR.responseText);
-                })
-                .always(function() {console.log('getJSON request ended!');
-                });
-            }
-          
-          function getTeachingPools(units) {
-            console.log("Starting to get teaching pool. Units: " + units);
-            for (var i = 0; i < units.length; i++) { 
-              console.log(units[i].wardName +" - Admin Rights: " +units[i].userHasWardAdminRights);
-              if (units[i].userHasWardAdminRights || units[i].userHasStakeAdminRights) { 
-                var unitNumber = units[i].wardUnitNo;
-                var url = "getTeachingPool?q=" + unitNumber;
-                console.log("Getting teaching pool. URL: "+url);
-                
-                $.getJSON(url, function(data) {
-                  var everything = '<table class="table"><thead>';
-                  everything += '<tr><th scope="col">#</th><th scope="col">Area</th><th scope="col">Full Name</th><th scope="col">Status</th><th scope="col">Gender</th><th scope="col">Age</th><th scope="col">Schedule Bapt Date</th></tr>';
-                  everything += '</thead><tbody>';
-                  var personCount = 0;
-                  $.each(data, function(i, item) {
-                      personCount++;
-                      var baptDate = convertDate(item.baptism_goal_date);
-                     everything += '<tr><th scope="row">'+personCount+'</th>';
-                     everything += '<td>' + item.missionaries.names + '</td><td>' + item.fullName +'</td><td>' + item.statusName +'</td><td>' + item.gender +'</td><td>' + item.age +'</td><td>' + formatDateOutput(baptDate) +'</td>';
-                     everything += '</tr>';
-                  });
-                  everything += "</tbody></table>";
-                  $("#teachingPoolResults").html(everything);
-                })
-                .done(function() {
-                      console.log('getJSON request succeeded');
-                })
-                .fail(function(jqXHR, textStatus, errorThrown) {
-                    console.log('getJSON request failed! ' + textStatus);
-                    console.log("incoming"+jqXHR.responseText); 
-                })
-                .always(function() {console.log('getJSON request ended!');
-                });
-              }
-              else {console.log(units[i].wardName + " skipped as user does not have admin rights");}
-            }
-          }
-          
-          function convertDate(ldsDate) {
-            if (ldsDate) {
-              return new Date(ldsDate);
-            }
-            else {
-              return null;
-            }
-          }
-          function formatDateOutput(ldsDate) {
-            if (ldsDate) {
-              return new Date(ldsDate.getTime() - (ldsDate.getTimezoneOffset() * 60000 ))       //https://stackoverflow.com/questions/23593052/format-javascript-date-to-yyyy-mm-dd
-                    .toISOString()
-                    .split("T")[0];
-            }
-            else {
-              return null;
-            }
-          }
-          
-        </script>
-        
-    </head>
-    
-    <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">WhiteField 7</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+        */
+      $('#loginForm').submit(function(e) {
+        e.preventDefault();
+        console.log('in the form submit function');
+        postLogin();
+        console.log("logged in!");
+        getUnits();
+      });
+    });
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">About</a>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    function postLogin() {
+      var url = "/login";
+      var data = {
+        user: $("#usernameField").val(),
+        password: $("#passwordField").val()
+      };
+
+      console.log("ABOUT TO AJAX");
+      $.ajax({
+        url: url,
+        type: 'POST',
+        data: data
+      }).done(response => {
+        console.log(response);
+      });
+    }
+
+    function getUnits() {
+      //search = search.toLowerCase();
+      var url = "getUnits";
+      url = encodeURI(url); //escape spaces and stuff
+      var units;
+
+      console.log(url);
+      $.getJSON(url, function(data) {
+          //console.log(data);
+          var everything;
+          everything = "<ol>";
+          $.each(data, function(i, item) {
+            everything += "<li><b>" + item.stakeName + '</b>: ' + item.stakeUnitNo;
+            everything += '<ol>';
+            $.each(data[0].wards, function(i, item) {
+              everything += "<li><b>" + item.wardName + '</b>: ' + item.wardUnitNo;
+            });
+            everything += '</ol>';
+          });
+          everything += "</ol>";
+          $("#unitResults").html(everything);
+          $("#searchTerm").text('Units');
+          //return data.responseJSON;
+        })
+        .done(function(data) {
+          console.log('getJSON request succeeded');
+          units = data;
+          console.log(units[0].wards);
+          getTeachingPools(units[0].wards);
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+          console.log('getJSON request failed! ' + textStatus);
+          console.log("incoming" + jqXHR.responseText);
+        })
+        .always(function() {
+          console.log('getJSON request ended!');
+        });
+    }
+
+    function getTeachingPools(units) {
+      console.log("Starting to get teaching pool. Units: " + units);
+      for (var i = 0; i < units.length; i++) {
+        console.log(units[i].wardName + " - Admin Rights: " + units[i].userHasWardAdminRights);
+        if (units[i].userHasWardAdminRights || units[i].userHasStakeAdminRights) {
+          var unitNumber = units[i].wardUnitNo;
+          var url = "getTeachingPool?q=" + unitNumber;
+          console.log("Getting teaching pool. URL: " + url);
+
+          $.getJSON(url, function(data) {
+              var everything = '<table class="table"><thead>';
+              everything += '<tr><th scope="col">#</th><th scope="col">Area</th><th scope="col">Full Name</th><th scope="col">Status</th><th scope="col">Gender</th><th scope="col">Age</th><th scope="col">Schedule Bapt Date</th></tr>';
+              everything += '</thead><tbody>';
+              var personCount = 0;
+              $.each(data, function(i, item) {
+                personCount++;
+                var baptDate = convertDate(item.baptism_goal_date);
+                everything += '<tr><th scope="row">' + personCount + '</th>';
+                everything += '<td>' + item.missionaries.names + '</td><td>' + item.fullName + '</td><td>' + item.statusName + '</td><td>' + item.gender + '</td><td>' + item.age + '</td><td>' + formatDateOutput(baptDate) + '</td>';
+                everything += '</tr>';
+              });
+              everything += "</tbody></table>";
+              $("#teachingPoolResults").html(everything);
+            })
+            .done(function() {
+              console.log('getJSON request succeeded');
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+              console.log('getJSON request failed! ' + textStatus);
+              console.log("incoming" + jqXHR.responseText);
+            })
+            .always(function() {
+              console.log('getJSON request ended!');
+            });
+        }
+        else { console.log(units[i].wardName + " skipped as user does not have admin rights"); }
+      }
+    }
+
+    function convertDate(ldsDate) {
+      if (ldsDate) {
+        return new Date(ldsDate);
+      }
+      else {
+        return null;
+      }
+    }
+
+    function formatDateOutput(ldsDate) {
+      if (ldsDate) {
+        return new Date(ldsDate.getTime() - (ldsDate.getTimezoneOffset() * 60000)) //https://stackoverflow.com/questions/23593052/format-javascript-date-to-yyyy-mm-dd
+          .toISOString()
+          .split("T")[0];
+      }
+      else {
+        return null;
+      }
+    }
+  </script>
+
+</head>
+
+<body>
+  <!-- Navigation -->
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">WhiteField 7</a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">About</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Views
         </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">People being taught</a>
-          <a class="dropdown-item" href="#">Recent converts</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Summary statistics</a>
-        </div>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#">Mission access</a>
-      </li>
-    </ul>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="#">People being taught</a>
+            <a class="dropdown-item" href="#">Recent converts</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Summary statistics</a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#">Mission access</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+
+
+
+  <div>
+    <div class="LDS_tools">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <h2>LDS Login Tools</h2>
+      </div>
+    </div>
   </div>
-</nav>
-      
+
+
+  <div>
     <div class="container">
       <div class="row">
-        <div class="col-lg-8 col-md-10 mx-auto"><h2>LDS Tools Login</h2></div>
-      </div>
-      <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto" id="SoSearchContainer">
-            <form id="loginForm">
-              <div class="form-group">
-                <label for='usernameField'>Username</label>
-                <div class="input-group">
-                  <input type="text" class="form-control" id='usernameField'>
-                </div>
-                <small id="usernameHelp" class="form-text text-muted">We'll never share your username with anyone else.</small>
+        <div class="col-lg-8 col-md-10 mx-auto" id="SoSearchContainer">
+          <form id="loginForm">
+            <div class="form-group">
+              <label for='usernameField'>Username</label>
+              <div class="input-group">
+                <input type="text" class="form-control" id='usernameField'>
               </div>
-              <div class="form-group">
-                <label for='passwowrdField'>Password</label>
-                <div class="input-group">
-                  <input type="password" class="form-control" id='passwordField'>
-                </div>
+              <small id="usernameHelp" class="form-text text-muted">We'll never share your username with anyone else.</small>
+            </div>
+            <div class="form-group">
+              <label for='passwowrdField'>Password</label>
+              <div class="input-group">
+                <input type="password" class="form-control" id='passwordField'>
               </div>
-                <!--
+            </div>
+            <!--
                 Username: <input type="text" id="usernameField" value="">
                 <br>
                 Password: <input type="password" id="passwordField" value="">
                 <input id="loginButton" type="submit" value="Submit">
                 -->
-                <button type='submit' id="loginButton">Login</button>
-            </form>
-            <h4 id="searchTerm">No search</h4>
-            <div id="unitResults">No results</div>
-            <div id="teachingPoolResults">No teaching pool</div>
-
+            <div class="buttonHolder">
+              <button type='submit' id="loginButton">Login</button>
+              <div class="search">
+                <h4 id="searchTerm">No search</h4>
+                <div id="unitResults">No results</div>
+                <div id="teachingPoolResults">No teaching pool</div>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
     </div>
-
-    <script src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </div>
 
 
-    </body>
-    
-    <!-- Footer ******************************************************************************************************************-->
-      <footer>
-        <div class="container">
-          <div class="row">
-            <div class="col-lg-8 col-md-10 mx-auto">
-              <p>
-                <a class="returnToTop" href="#top">Return to Top</a>
-              </p>
-              <p class="copyright text-muted" style="margin-left:auto; margin-right:auto; text-align:center;">Copyright &copy; 2018 Benson Kane</p>
-            </div>
-          </div>
-        </div>
-      </footer>
+
+  <script src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+
+</body>
+
+<!-- Footer ******************************************************************************************************************-->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <p>
+          <a class="returnToTop" href="#top">Return to Top</a>
+        </p>
+        <p class="copyright" style="margin-left:auto; margin-right:auto; text-align:center;">Copyright &copy; 2018 Benson Kane</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
 </html>
