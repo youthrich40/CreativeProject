@@ -126,12 +126,6 @@ body {
 	
 }
 
-.search{
-	padding-top: 30px;
-	text-align: center;
-	color: white;
-}
-
 #userinfo {
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
     border-collapse: collapse;
@@ -168,6 +162,16 @@ body {
     -webkit-transition-duration: 0.4s; /* Safari */
     transition-duration: 0.4s;
     cursor: pointer;
+}
+
+.search{
+	padding-top: 30px;
+	text-align: center;
+	color: black;
+	background-color: white;
+	border-radius: 15px;
+	padding: 8px 30px;
+	border: 2px solid #e7e7e7;
 }
 
 .button {
