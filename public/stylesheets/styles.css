@@ -26,7 +26,7 @@ footer {
 }
 body {
 	/*background-color:#e6e6e6;*/
-	background-image: url("../../source/img01.jpg");
+	background-image: url("../source/img01.jpg");
 	background-size: cover;
 	background-position: top; /* Center the image */
   background-repeat: no-repeat; /* Do not repeat the image */
